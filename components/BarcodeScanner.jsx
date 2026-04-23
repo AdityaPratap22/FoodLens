@@ -1,71 +1,87 @@
-// components/BarcodeScanner.jsx
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+
+import { useEffect, useRef, useState } from "react";
 import { BrowserMultiFormatReader } from "@zxing/browser";
 
 export default function BarcodeScanner({ onDetected }) {
   const videoRef = useRef(null);
-  const codeReaderRef = useRef(null);
+  const readerRef = useRef(null);
+  const lastResultRef = useRef(null);
+
+  const [status, setStatus] = useState("Initializing camera…");
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    codeReaderRef.current = new BrowserMultiFormatReader();
-
     let active = true;
-    const start = async () => {
+
+    const reader = new BrowserMultiFormatReader(undefined, 500);
+    readerRef.current = reader;
+
+    async function start() {
       try {
-        // request permission first
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          try {
-            await navigator.mediaDevices.getUserMedia({ video: true });
-          } catch (permErr) {
-            throw new Error("Camera permission required. Allow camera and refresh.");
-          }
+        if (!navigator.mediaDevices?.getUserMedia) {
+          throw new Error("Camera not supported");
         }
 
-        // select a video device (standard API)
-        let deviceId;
-        if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-          const devices = await navigator.mediaDevices.enumerateDevices();
-          const videoInputs = devices.filter((d) => d.kind === "videoinput");
-          deviceId = videoInputs[0]?.deviceId;
-        }
+        setStatus("Requesting camera permission…");
 
-        await codeReaderRef.current.decodeFromVideoDevice(
-          deviceId || undefined,
+        await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+        });
+
+        setStatus("Scanning barcode…");
+
+        await reader.decodeFromVideoDevice(
+          undefined, // auto-select back camera
           videoRef.current,
           (result, err) => {
             if (!active) return;
-            if (result && typeof onDetected === "function") {
-              onDetected(result.getText());
+
+            if (result) {
+              const text = result.getText();
+
+              if (lastResultRef.current === text) return;
+              lastResultRef.current = text;
+
+              setStatus(`Detected: ${text}`);
+              onDetected?.(text);
             }
           }
         );
       } catch (e) {
-        console.error("BarcodeScanner start error:", e);
-        setError(e.message || "Camera / scanner error");
+        console.error("Barcode scanner error:", e);
+        setError("Camera access failed. Allow permission and reload.");
       }
-    };
+    }
 
     start();
 
     return () => {
       active = false;
       try {
-        if (codeReaderRef.current) codeReaderRef.current.reset();
-      } catch (e) {}
+        reader.reset();
+      } catch {}
     };
   }, [onDetected]);
 
   return (
-    <div className="w-full h-full">
-      {error && <p className="text-rose-500 text-sm mb-2">Error: {error}</p>}
+    <div className="relative w-full h-full bg-black rounded-lg overflow-hidden">
+      {/* Scan box */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-64 h-40 border-2 border-green-400 rounded-md opacity-80" />
+      </div>
+
+      {/* Status */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs px-3 py-1 rounded">
+        {error ? error : status}
+      </div>
+
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        className="w-full h-full object-cover"
       />
     </div>
   );

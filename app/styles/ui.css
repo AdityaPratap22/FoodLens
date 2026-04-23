@@ -1,0 +1,109 @@
+/* ============================================================
+   FoodLens — Global Component Styles (Tailwind v4)
+   NOTE: @apply warnings in the IDE are expected — Tailwind
+   processes them correctly at build time.
+   ============================================================ */
+
+/* Base animations — defined first so they're available everywhere */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@layer components {
+  /* ─── Layout ─── */
+  .page {
+    @apply max-w-6xl mx-auto px-6 py-12;
+  }
+
+  .hero {
+    @apply text-center max-w-3xl mx-auto mb-16 mt-8;
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  /* ─── Typography ─── */
+  .hero-title {
+    @apply text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight;
+  }
+
+  .hero-subtitle {
+    @apply mt-6 text-lg md:text-xl text-zinc-400 font-light leading-relaxed;
+  }
+
+  /* ─── Buttons ─── */
+  .primary-btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl
+           font-semibold text-white transition-all duration-300
+           hover:-translate-y-0.5;
+    background: linear-gradient(135deg, #10b981, #14b8a6);
+    box-shadow: 0 4px 20px rgba(16,185,129,0.25);
+  }
+  .primary-btn:hover {
+    box-shadow: 0 6px 28px rgba(16,185,129,0.4);
+  }
+
+  .secondary-btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl
+           border border-white/10 bg-white/5 text-zinc-300 font-medium
+           backdrop-blur-md hover:bg-white/10 hover:text-white transition-all duration-300;
+  }
+
+  /* ─── Glass / Card ─── */
+  .glass-panel {
+    background: rgba(24, 24, 27, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+  }
+
+  .card {
+    @apply rounded-2xl p-6 transition-all duration-300;
+    background: rgba(24, 24, 27, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+  }
+  .card:hover {
+    background: rgba(39, 39, 42, 0.8);
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  .card-title {
+    @apply text-xl font-semibold mb-3 text-white;
+  }
+
+  .card-text {
+    @apply text-sm leading-relaxed text-zinc-400;
+  }
+
+  /* ─── Health Score Badges ─── */
+  .badge-health-green {
+    @apply inline-flex px-3 py-1 rounded-lg font-semibold;
+    background: rgba(16,185,129,0.1);
+    color: #34d399;
+    border: 1px solid rgba(16,185,129,0.2);
+    box-shadow: 0 0 15px rgba(16,185,129,0.2);
+  }
+
+  .badge-health-yellow {
+    @apply inline-flex px-3 py-1 rounded-lg font-semibold;
+    background: rgba(245,158,11,0.1);
+    color: #fbbf24;
+    border: 1px solid rgba(245,158,11,0.2);
+    box-shadow: 0 0 15px rgba(245,158,11,0.2);
+  }
+
+  .badge-health-red {
+    @apply inline-flex px-3 py-1 rounded-lg font-semibold;
+    background: rgba(225,29,72,0.1);
+    color: #fb7185;
+    border: 1px solid rgba(225,29,72,0.2);
+    box-shadow: 0 0 15px rgba(225,29,72,0.2);
+  }
+}

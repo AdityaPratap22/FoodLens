@@ -1,39 +1,11 @@
-/* app/globals.css — recommended clean version for Tailwind (installed via PostCSS) */
+@import "tailwindcss";
+@import "./styles/ui.css";
 
-/* Tailwind layers (keep in this order) */
-@import "tailwindcss/preflight";
-@tailwind utilities;
-
-/* --- Custom base styles (use @layer if you want to integrate with Tailwind's precedence) --- */
-@layer base {
-  :root {
-    --background: #ffffff;
-    --foreground: #171717;
-    --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: #0a0a0a;
-      --foreground: #ededed;
-    }
-  }
-
-  html, body {
-    height: 100%;
-    background-color: var(--background);
-    color: var(--foreground);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* small utility as an example: body padding on small screens */
-  body {
-    padding: 0;
-    margin: 0;
-  }
+@theme {
+  --color-zinc-950: #09090b;
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Your extra custom styles can go below or inside @layer components */
+body {
+  background-color: var(--color-zinc-950);
+}
